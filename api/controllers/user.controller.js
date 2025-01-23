@@ -67,6 +67,9 @@ async function editUser(req,res) {
         const updatedUser=await User.updateOne({_id:id},req.body)
 
         console.log("Updated user",updatedUser);
+        if(updatedUser===null){
+            return res.status(404).json({success:true,msg:"Not found"})
+        }
 
         res.status(200).json({success:true, msg:"successful"})
         

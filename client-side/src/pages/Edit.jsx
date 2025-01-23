@@ -11,7 +11,7 @@ export default function Edit() {
     const [edits,setEdits]=useState({
         name:"",
         age:null,
-        hobbies:""
+        hobbies:[]
     })
 
     useEffect(()=>{
@@ -29,6 +29,8 @@ export default function Edit() {
 
             console.log(response.data.data);
             setGetUser(response.data.data);
+
+            
             
         } catch (error) {
             console.log(error);
@@ -67,6 +69,9 @@ export default function Edit() {
             const response=await axios.put(`http://localhost:3000/user/edit/${id}`,edits)
             console.log(response);
             navigate("/");
+            if(response.data.success){
+                alert("Updated Successfully");
+            }
             
         } catch (error) {
             console.log(error);

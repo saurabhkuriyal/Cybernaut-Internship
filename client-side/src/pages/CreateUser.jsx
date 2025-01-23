@@ -8,7 +8,7 @@ export default function CreateUser() {
     const [fromData,setFromData]=useState({
         name:"",
         age:null,
-        hobbies:""
+        hobbies:[]
     })
 
     function handleChange(e) {
@@ -28,6 +28,10 @@ export default function CreateUser() {
 
                 navigate("/")
 
+                if(response.data.success){
+                    alert("User Added Successfully")
+                }
+
                 
             } catch (error) {
                 console.log(error);
@@ -37,7 +41,7 @@ export default function CreateUser() {
     }
 
     return (
-        <div className="container">
+        <div className="container w-50">
             <div className="form p-0 signup" >
                 <form action="" onSubmit={send} className="row g-3 signUpVercelStyle">
                     <div className="box">
@@ -59,7 +63,7 @@ export default function CreateUser() {
 
 
                     <div className="col-12">
-                        <br /><button className="btn btn-primary" type="submit">Sign up</button>
+                        <br /><button className="btn btn-primary" type="submit">Add</button>
                     </div>
                 </form>
             </div>

@@ -2,11 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ReactFlow, { addEdge, Controls } from "react-flow-renderer";
 import { Link } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 export default function Home() {
     const [users, setUsers] = useState([]);
     const [nodes, setNodes] = useState([]);
     const [edges, setEdges] = useState([]);
+    const [hobbies] = useState(["Reading", "Hiking", "Painting", "Running", "Swimming","Dancing","Writing","Singing"]);
 
     useEffect(() => {
         fetchUsers();
@@ -28,7 +30,7 @@ export default function Home() {
                         <div
                             style={{
                                 textAlign: "center",
-                                padding: "1px",
+                                
                                 background: "#e3f2fd",
                                 borderRadius: "5px",
                             }}
@@ -37,8 +39,8 @@ export default function Home() {
                             <br />
                             Age: {user.age} <br />
                             <div className="actions d-flex gap-2">
-                            <Link to={`/user/${user._id}`} className="btn btn-warning">Edit</Link>
-                            <button onClick={()=>handleDelete(user._id)} className="btn btn-danger">Delete</button>
+                                <Link to={`/user/${user._id}`} className="btn btn-warning">Edit</Link>
+                                <button onClick={() => handleDelete(user._id)} className="btn btn-danger">Delete</button>
                             </div>
                         </div>
                     ),
@@ -80,17 +82,56 @@ export default function Home() {
     // Handle new connections (optional if users need to create edges manually)
     const onConnect = (connection) => setEdges((eds) => addEdge(connection, eds));
 
+    // Handle dragging a hobby
+    const handleDragStart = (event, hobby) => {
+        event.dataTransfer.setData("hobby", hobby);
+    };
+
+    // Handle dropping a hobby on a node
+    const handleDrop = (event, nodeId) => {
+        const hobby = event.dataTransfer.getData("hobby");
+        setNodes((nds) =>
+            nds.map((node) => {
+                if (node.id === nodeId) {
+                    return {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            label: (
+                                <div>
+                                    <strong>{node.data.label}</strong>
+                                    <br />
+                                    Hobbies: {(node.hobbies || []).concat(hobby).join(", ")}
+                                </div>
+                            ),
+                        },
+                        hobbies: (node.hobbies || []).concat(hobby),
+                    };
+                }
+                return node;
+            })
+        );
+    };
+
     return (
         <div>
 
-        <div style={{ height: "100vh", width: "100%" }}>
-        <button className="btn btn-primary m-2">Add User</button>
-            <ReactFlow nodes={nodes} edges={edges} onConnect={onConnect} fitView>
-                <Controls />
-            </ReactFlow>
+            <div className="d-flex" style={{ height: "100vh" }}>
 
-            
-        </div>
+                <ReactFlow className="w-70" nodes={nodes} edges={edges}
+                    onNodeDragStop={(event, node) => handleDrop(event, node._id)}
+
+                    onConnect={onConnect} fitView>
+
+                    
+                    
+                    <Controls />
+                </ReactFlow>
+
+                <div className="border container w-50">
+                    <Sidebar hobbies={hobbies} onDragStart={handleDragStart} />
+                </div>
+            </div>
         </div>
     );
 }
