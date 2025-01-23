@@ -103,7 +103,7 @@ export default function Edit() {
 
 
                     <div className="col-12">
-                        <br /><button className="btn btn-primary" type="submit">Sign up</button>
+                        <br /><button className="btn btn-primary" type="submit">Edit</button>
                     </div>
                 </form>
             </div>
